@@ -1,5 +1,10 @@
 # ghmir
 
+## Dependencies
+
+This tool depends on [ghorg](https://github.com/gabrie30/ghorg) as this is just a thin wrapper
+around that.
+
 ## Installation
 
 ### Using go install
