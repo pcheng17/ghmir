@@ -30,14 +30,8 @@ type Config struct {
 	Entities         map[string]EntityConfig `yaml:"entities"`
 }
 
-func loadConfig(requestedEntities []string) (*Config, error) {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get home directory: %w", err)
-	}
-
-	configPath := filepath.Join(homeDir, ".config", "ghmir", "secrets.yaml")
-	data, err := os.ReadFile(configPath)
+func loadConfig(configFile string, requestedEntities []string) (*Config, error) {
+	data, err := os.ReadFile(configFile)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read config file: %w", err)
 	}
@@ -185,7 +179,7 @@ func processRepositories(entityName string, entityConfig EntityConfig, backupDir
 }
 
 var (
-    secretsFile string
+    configFile string
     backupDir string
     entities string
     doPush bool
@@ -217,7 +211,8 @@ var rootCmd = &cobra.Command{
             return fmt.Errorf("failed to create backup directory: %w", err)
         }
 
-        config, err := loadConfig(entityList)
+        expandedConfigFile := os.ExpandEnv(configFile)
+        config, err := loadConfig(expandedConfigFile, entityList)
         if err != nil {
             return fmt.Errorf("failed to load config: %w", err)
         }
@@ -260,7 +255,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
     rootCmd.Version = version
-    rootCmd.Flags().StringVarP(&secretsFile, "secrets", "", "$HOME/.config/ghmir/secrets.yaml", "File containing secrets")
+    rootCmd.Flags().StringVarP(&configFile, "config", "", "$HOME/.config/ghmir/config.yaml", "File containing configurations and secrets")
     rootCmd.Flags().StringVarP(&backupDir, "path", "", "", "Backup directory path")
     rootCmd.Flags().StringVarP(&entities, "entities", "", "", "Comma-separated list of entities to mirror")
     rootCmd.Flags().BoolVarP(&doPush, "push", "", false, "Push to GitLab")

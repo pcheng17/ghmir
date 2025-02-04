@@ -29,12 +29,12 @@ Download the ZIP file from the releases page and extract it to a location in you
 
 ## Secrets
 
-When using `ghmir`, one can specify a YAML file containing the necessary secrets via `--secrets`, or
-if one is not specified, then `ghmir` will by default look for `$HOME/.config/ghmir/secrets.yaml`.
+When using `ghmir`, one can specify a YAML file containing the necessary secrets via `--config`, or
+if one is not specified, then `ghmir` will by default look for `$HOME/.config/ghmir/config.yaml`.
 The YAML file should look like the following:
 
 ```
-discord_webhook: "discord-webhook"
+discord_webhook: "discord_webhook"
 
 entities:
   entityA:
