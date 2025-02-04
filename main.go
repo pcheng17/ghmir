@@ -176,10 +176,11 @@ func processRepositories(entityName string, entityConfig EntityConfig, backupDir
 		summary += fmt.Sprintf("\nFailed repos: %v", failedList)
 	}
 
-	if err := sendDiscordMessage(summary, webhookURL); err != nil {
-		log.Printf("Failed to send Discord message: %v", err)
-	}
-
+    if webhookURL != "" {
+        if err := sendDiscordMessage(summary, webhookURL); err != nil {
+            log.Printf("Failed to send Discord message: %v", err)
+        }
+    }
 	return nil
 }
 
